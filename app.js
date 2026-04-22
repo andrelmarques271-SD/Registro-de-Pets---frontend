@@ -1,10 +1,9 @@
-const API_URL = 'https://registro-de-pets-backend.onrender.com/api/entries';
+const API_URL = 'https://registro-de-pets-backend.onrender.com/animals';
 
 const form = document.getElementById('entry-form');
 const entryId = document.getElementById('entry-id');
-const title = document.getElementById('title');
-const description = document.getElementById('description');
-const happenedAt = document.getElementById('happenedAt');
+const nome = document.getElementById('title');       // reaproveitando campo
+const raca = document.getElementById('description'); // reaproveitando campo
 const entriesList = document.getElementById('entries-list');
 const message = document.getElementById('message');
 const cancelEdit = document.getElementById('cancel-edit');
@@ -18,32 +17,27 @@ function showMessage(text) {
 function clearForm() {
   form.reset();
   entryId.value = '';
-  formTitle.textContent = 'Novo registro';
+  formTitle.textContent = 'Novo Pet';
   cancelEdit.classList.add('hidden');
-  happenedAt.value = new Date().toISOString().slice(0, 16);
-}
-
-function formatDate(date) {
-  return new Date(date).toLocaleString('pt-BR');
 }
 
 async function loadEntries() {
   const response = await fetch(API_URL);
-  const entries = await response.json();
+  const animals = await response.json();
 
-  if (!entries.length) {
-    entriesList.innerHTML = '<p>Nenhum registro encontrado.</p>';
+  if (!animals.length) {
+    entriesList.innerHTML = '<p>Nenhum pet encontrado.</p>';
     return;
   }
 
-  entriesList.innerHTML = entries.map(entry => `
+  entriesList.innerHTML = animals.map(animal => `
     <div class="entry-item">
-      <h3>${entry.title}</h3>
-      <p>${formatDate(entry.happenedAt)}</p>
-      <p>${entry.description}</p>
+      <h3>${animal.nome}</h3>
+      <p>Raça: ${animal.raça}</p>
+
       <div class="entry-buttons">
-        <button onclick="editEntry('${entry._id}')">Editar</button>
-        <button onclick="deleteEntry('${entry._id}')">Excluir</button>
+        <button onclick="editEntry('${animal._id}')">Editar</button>
+        <button onclick="deleteEntry('${animal._id}')">Excluir</button>
       </div>
     </div>
   `).join('');
@@ -63,23 +57,22 @@ async function saveEntry(data) {
 
 window.editEntry = async function (id) {
   const response = await fetch(`${API_URL}/${id}`);
-  const entry = await response.json();
+  const animal = await response.json();
 
-  entryId.value = entry._id;
-  title.value = entry.title;
-  description.value = entry.description;
-  happenedAt.value = new Date(entry.happenedAt).toISOString().slice(0, 16);
+  entryId.value = animal._id;
+  nome.value = animal.nome;
+  raca.value = animal.raça;
 
-  formTitle.textContent = 'Editar registro';
+  formTitle.textContent = 'Editar Pet';
   cancelEdit.classList.remove('hidden');
-  showMessage('Editando registro.');
+  showMessage('Editando pet.');
 };
 
 window.deleteEntry = async function (id) {
-  if (!confirm('Deseja excluir este registro?')) return;
+  if (!confirm('Deseja excluir este pet?')) return;
 
   await fetch(`${API_URL}/${id}`, { method: 'DELETE' });
-  showMessage('Registro excluído.');
+  showMessage('Pet excluído.');
   loadEntries();
 };
 
@@ -87,13 +80,12 @@ form.addEventListener('submit', async (e) => {
   e.preventDefault();
 
   const data = {
-    title: title.value,
-    description: description.value,
-    happenedAt: happenedAt.value
+    nome: nome.value,
+    raça: raca.value
   };
 
   await saveEntry(data);
-  showMessage(entryId.value ? 'Registro atualizado.' : 'Registro criado.');
+  showMessage(entryId.value ? 'Pet atualizado.' : 'Pet criado.');
   clearForm();
   loadEntries();
 });

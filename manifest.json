@@ -1,11 +1,11 @@
 {
-  "name": "Diário Pet",
-  "short_name": "PetDiary",
-  "start_url": "./index.html",
+  "name": "Cadastro de Pets",
+  "short_name": "Pets",
+  "start_url": ".",
   "display": "standalone",
   "background_color": "#f5f7fb",
   "theme_color": "#4f46e5",
-  "description": "Aplicativo para registrar acontecimentos do seu pet.",
+  "description": "Aplicativo para gerenciar seus pets.",
   "icons": [
     {
       "src": "icons/icon-192.png",
