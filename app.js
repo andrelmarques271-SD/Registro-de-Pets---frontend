@@ -1,4 +1,4 @@
-const API_URL = 'https://registro-de-pets-backend.onrender.com/animals';
+const API_URL = 'https://registro-de-pets-backend.onrender.com/api/animals';
 
 const form = document.getElementById('entry-form');
 const entryId = document.getElementById('entry-id');
